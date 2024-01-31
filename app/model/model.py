@@ -2,8 +2,9 @@ import torch
 import torch.nn as nn
 from torchvision import transforms
 from PIL import Image
+from pathlib import Path
 
-
+BASE_DIR = Path(__file__).resolve().parent
 
 
 # VGG MODEL ARCHITECTURE
@@ -15,7 +16,7 @@ class VGG(nn.Module):
         in_height=224,
         in_width=224,
         num_hidden=4096,
-        num_classes=1000
+        num_classes=10
     ):
         super(VGG, self).__init__()
         self.in_channels = in_channels
@@ -164,6 +165,8 @@ VGG_types = {
 
 
 
+
+
 def get_model():
     # VGG19 model instantiated
     model = VGG(
@@ -172,13 +175,11 @@ def get_model():
         in_width=32,
         architecture=VGG_types["VGG19"]
     )
-
+    
     # Load the saved model state dict
-    checkpoint_path = "./model/checkpoint/ckpt.pth"
-    checkpoint = torch.load(checkpoint_path)
-
-
-
+    checkpoint_path = BASE_DIR / "checkpoint" / "ckpt.pth"
+    checkpoint = torch.load(checkpoint_path,map_location=torch.device('cpu'))
+    
     # Check if the model was saved using DataParallel
     if 'module.' in list(checkpoint['model_state_dict'].keys())[0]:
         # Remove the 'module.' prefix from the keys

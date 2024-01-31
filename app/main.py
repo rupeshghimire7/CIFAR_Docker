@@ -1,8 +1,10 @@
 from fastapi import FastAPI, UploadFile
 from pydantic import BaseModel
+from fastapi.responses import JSONResponse
 import shutil
 from app.model.model import make_inference
 from app.model.model import __version__ as model_version
+
 
 # Label classes
 classes = ('plane', 'car', 'bird', 'cat', 'deer',
@@ -12,7 +14,6 @@ app = FastAPI()
 
 class ImageRequest(BaseModel):
     file: UploadFile
-
 
 # to check if it's working
 @app.get('/')
@@ -34,5 +35,5 @@ async def upload_image(image_request: ImageRequest):
     label, confidence = make_inference(uploaded_file_path)
     result = classes[label]
 
-    # You can return the result or any other response you want
-    return {"result": result, 'confidence':confidence, "model_version": model_version}
+    # Return the result or any other response you want
+    return JSONResponse(content={"result": result, 'confidence': confidence, "model_version": model_version})
