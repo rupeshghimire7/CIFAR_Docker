@@ -15,7 +15,7 @@ In this repository, I accomplished the following tasks:
 
 ## Repo Structure and Files
 
-**app**
+|-app
 
 |-- model/
 
